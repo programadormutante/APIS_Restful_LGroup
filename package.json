@@ -1,0 +1,19 @@
+{
+  "name": "cursoJquery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node --watch index.js"
+  },
+  "keywords": [],
+  "author": "david",
+  "license": "ISC",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0"
+  }
+}
