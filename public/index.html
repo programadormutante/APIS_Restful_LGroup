@@ -1,16 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/custom.css">
 </head>
 <body>
-    <h1>API Redtube</h1>
+    <div id="modal-video" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe style="height: 400px; width: 500px" id="iframe-video"> </iframe>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 
-    
+    <div class="container">
+        <div class="jumbotron">
+            <h1>.Net Coders</h1>
+            <p>RedTube Zona Lestê</p>
+            <div class="input-group">
+                <input id="txt-pesquisar" type="text" class="form-control" placeholder="Mia Khalifa...">
+                <span class="input-group-btn">
+	        <button id="btn-pesquisar" class="btn btn-default" type="button">Pesquisar</button>
+	      </span>
+            </div>
+            <!-- /input-group -->
+        </div>
 
-    <script src="./bower_components/jquery/dist/jquery.js"></script>
-    <script src="./bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <div id="div-loading" style="display : none;">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
+                    style="width: 100%">
+                    <span class="sr-only">45% Complete</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="conteudo">
+        </div>
+        <!-- fecha conteudo -->
+    </div>
+
+    <script id="tmpl-video" type="text/html">
+		  <div data-titulo="${video.title}" data-url="${video.embed_url}" class="col-sm-6 col-md-3 video">
+		    <div class="thumbnail">
+		      <img style="width: 100%" class="img-video" src="${video.thumb}" alt="...">
+		      <div class="caption">
+		        <h3>Tempo: ${video.duration}</h3>
+		        <p class="txt-video">${video.title} </p>
+		      </div>
+		    </div>
+		  </div>
+    </script>
+
+    <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="https://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	
+$("#btn-pesquisar").click(() => {
+		let termo = $("#txt-pesquisar").val()
+		const proxy = "https://crossorigin.me/"
+		const url = `${proxy}http://api.redtube.com/?data=redtube.Videos.searchVideos&output=json&search=${termo}`
+		$.ajax(
+			{
+				url : url,
+				method: 'GET',
+				beforeSend : () => $("#div-loading").show(),
+				success : (retorno) => {
+					if(retorno.count) {
+						$(".video").remove();
+				        $("#tmpl-video").tmpl(retorno.videos).appendTo("#conteudo");
+					} else 	{
+						alert("Não foi encontrado nenhum video");
+					}
+				},
+				error : () => alert("falha de conexão"),
+				complete: () => $("#div-loading").hide()
+			})
+
+	})
+
+$("#conteudo").on('click', '.img-video', function () {
+	//jogando o elemento em uma variavel (Fica mais fácil)
+	var elemento = $(this);
+	var url = elemento.closest(".video").data("url");
+	var titulo = elemento.closest(".video").data("titulo");
+	$(".modal-title").html(titulo);
+	$("#iframe-video").attr("src", url);
+	//Pra usar o comando modal, precisamos importar o bootstrap.js
+	$("#modal-video").modal();
+})
+</script>
+
 </body>
 </html>

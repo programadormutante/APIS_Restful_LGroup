@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-watch index.js"
+    "start": "babel-node index.js"
   },
   "keywords": [],
   "author": "david",
